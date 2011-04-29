@@ -489,10 +489,14 @@ else { var oB; }
                 
             //Set Width or Height Value
                 function setValue(i, x) {
+                    var w = oB.docWidth;
+                    var h = oB.docHeight;
+                    if(oB.docWidth > $(window).width()) { w = $(window).width() }
+                    if(oB.docHeight > $(window).height()) { h = $(window).height() }
                     if(i > 1) { return i; }
                     else if(i > 0) {
-                        if(x === "width") { return oB.docWidth * i; }
-                        else if(x === "height") { return oB.docHeight * i; }
+                        if(x === "width") { return w * i; }
+                        else if(x === "height") { return h * i; }
                     }
                     return false;
                 };
