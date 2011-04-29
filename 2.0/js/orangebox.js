@@ -13,8 +13,8 @@ else { var oB; }
         playing: '',
         slideshowTimer: '',
         slideshow: '',
-        docHeight: $(window).height(),
-        docWidth: $(window).width(),
+        docHeight: '',
+        docWidth: '',
         controlTimer: '',
         settings: {
             autoplay : false,
@@ -55,6 +55,8 @@ else { var oB; }
                             var gallery;
                             oB.galleryArray=new Array();
                             oB.slideshow = true;
+                            oB.docHeight = $(document).height();
+                            oB.docWidth = $(document).width();
                             
                         //Check for unique elements
                             function uniqueCheck(z, h) {
@@ -123,28 +125,16 @@ else { var oB; }
                                 var title = $('<div id="ob_title"></div>');
                                 var navRight = $('<a class="ob_nav ob_controls ob_cs" id="ob_right"><span class="ob_cs" id="ob_right-ico"></span></a>');
                                 var navLeft = $('<a class="ob_nav ob_controls ob_cs" id="ob_left"><span class="ob_cs" id="ob_left-ico"></span></a>');
-                                var scrollPos = oB.methods.getScrollPos();
                                 oB.playing = oB.settings.autoplay;
                                 oB.progress = null;
                                 
                             //Set CSS
-                                overlay.css({"opacity" : oB.settings.overlayOpacity,
-                                    "min-width": oB.docWidth,
-                                    "min-height": oB.docHeight + scrollPos
+                                overlay.css({
+                                    "opacity" : oB.settings.overlayOpacity,
+                                    "min-height": $(document).height(),
+                                    "min-width": $(document).width()
                                     });
-                                container.css({ "margin-top" : oB.settings.scrollPos });
-                                window.onscroll = function() {
-                                    var x = oB.methods.getScrollPos();
-                                    if(x > scrollPos) {
-                                        oB.scrollTimer = setTimeout(function(){
-                                            overlay.css({
-                                                "height": x + oB.docHeight
-                                            });
-                                            scrollPos = x;
-                                            clearTimeout(oB.scrollTimer);
-                                        },300);
-                                    }
-                                };
+                                container.css({ "margin-top" : oB.methods.getScrollPos() });
                                 
                             //if IE 6					
                                 if (typeof document.body.style.maxHeight === "undefined") { 
@@ -191,10 +181,10 @@ else { var oB; }
                                 if(oB.galleryArray.length > 0) {
                                     
                                 //Initiate OrangeControls
-                                    if(oB.settings.orangeControls) { $(document).orangeControls(); }
+                                    if(oB.settings.orangeControls && oB.galleryArray.length > 1) { $(document).orangeControls(); }
                                     
                                 //Initiate Nav Arrows
-                                    if(oB.settings.showNav) {
+                                    if(oB.settings.showNav && oB.galleryArray.length > 1) {
                                         window.append(navRight).append(navLeft);
                                         navLeft.click( function (e) {
                                             if(oB.progress === null) {
@@ -215,7 +205,7 @@ else { var oB; }
                                     }
                                     
                                 //Initiate Nav Dots
-                                    if(oB.settings.showDots) {
+                                    if(oB.settings.showDots && oB.galleryArray.length > 1) {
                                         window.append(dotnav);
                                         dotnav.find("li").click(function() {
                                             if(!$(this).hasClass('current') && oB.progress === null) {
@@ -335,7 +325,8 @@ else { var oB; }
                 }
                 
                 var isError = false;
-    
+                $('#ob_overlay').css({ "height": oB.docHeight });
+                
             //Start Preloader
                 oB.methods.showLoad();
                     
@@ -386,10 +377,10 @@ else { var oB; }
                             if(oB.settings.orangeControls) {
                                 $(document).unbind('oc_right').unbind('oc_left').unbind('oc_play').unbind('oc_pause');
                                 var oc_settings = { 'play' : true, 'play_active' : false, 'left_active' : false, 'right_active' : false };
-                                if(oB.playing && oB.galleryArray[currentIndex + 1]) {
+                                if(oB.playing && oB.galleryArray[currentIndex + 1] && oB.galleryArray.length > 1) {
                                     oc_settings.play = false;
                                 }
-                                if(oB.galleryArray[currentIndex + 1]) {
+                                if(oB.galleryArray[currentIndex + 1] && oB.galleryArray.length > 1) {
                                     oc_settings.right_active = true;
                                     $(document).bind('oc_right',function(){
                                         if(oB.progress === null){
@@ -399,7 +390,7 @@ else { var oB; }
                                         }
                                     });
                                 }
-                                if(oB.galleryArray[currentIndex - 1]) {
+                                if(oB.galleryArray[currentIndex - 1] && oB.galleryArray.length > 1) {
                                     oc_settings.left_active = true;
                                     $(document).bind('oc_left',function(){
                                         if(oB.progress === null){
@@ -434,7 +425,6 @@ else { var oB; }
                             }
                             else { $('#ob_left').hide(); }
                         }
-                        else { $('#ob_dots').hide(); }
                         $('#ob_close').fadeIn(oB.settings.fadeTime);
                     };
                     if(oB.settings.fadeControls) {
@@ -473,6 +463,7 @@ else { var oB; }
                     ob_content.append(content);
                     $('#ob_window').prepend(ob_content).fadeIn(oB.settings.fadeTime, function(){
                         if(initial){ $(document).trigger('oB_init'); }
+                        $('#ob_overlay').css({ "height": $(document).height() });
                     });
                     setModalProperties();
                     setControls();
@@ -484,7 +475,9 @@ else { var oB; }
                     content = $('<div id="ob_error">' + oB.settings.notFound + '</div>');
                     oB.methods.showLoad("stop");
                     ob_content.empty().append(content);
-                    $('#ob_window').prepend(ob_content).fadeIn(oB.settings.fadeTime);
+                    $('#ob_window').prepend(ob_content).fadeIn(oB.settings.fadeTime, function(){
+                        $('#ob_overlay').css({ "height": $(document).height() });    
+                    });
                     $('#ob_title').hide();
                     $('#ob_right').hide();
                     $('#ob_left').hide();
@@ -710,9 +703,6 @@ else { var oB; }
     };
     
 	$.fn.orangeBox = function( method ) {        
-        if(oB.docHeight === 0){oB.docHeight = $(document).height();}
-        if(oB.docWidth === 0){oB.docWidth = $(document).width();}
-		
         if ( method === "showContent" ) {
             $.error( 'OrangeBox: ' +  method + ' cannot be called externally' );
         }
