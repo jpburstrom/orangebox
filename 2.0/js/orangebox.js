@@ -57,7 +57,7 @@ else { var oB; }
                             oB.slideshow = true;
                             oB.docHeight = $(document).height();
                             oB.docWidth = $(document).width();
-                            
+                            if(!jQuery().orangeControls) { oB.settings.orangeControls = false; }
                         //Check for unique elements
                             function uniqueCheck(z, h) {
                                 var i;
