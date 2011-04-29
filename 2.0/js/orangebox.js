@@ -434,6 +434,7 @@ else { var oB; }
                             }
                             else { $('#ob_left').hide(); }
                         }
+                        else { $('#ob_dots').hide(); }
                         $('#ob_close').fadeIn(oB.settings.fadeTime);
                     };
                     if(oB.settings.fadeControls) {
