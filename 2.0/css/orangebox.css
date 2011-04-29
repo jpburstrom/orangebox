@@ -110,12 +110,8 @@
 	width:75px;
 	z-index:1102;
 }
-#ob_left {
-	left:-53px;
-}
-#ob_right {
-	right:-53px;
-}
+#ob_left { left:-53px; }
+#ob_right { right:-53px; }
 #ob_left-ico,#ob_right-ico {
 	cursor:pointer;
 	display:block;
@@ -134,9 +130,7 @@
 	background:url(buttons.png) right;
 	left:10px;
 }
-#ob_left:hover,#ob_right:hover {
-	visibility:visible;
-}
+#ob_left:hover,#ob_right:hover { visibility:visible; }
 #ob_dots {
 	list-style:none;
 	text-align:center;
@@ -158,6 +152,4 @@
 	zoom:1;
 	*display:inline;
 }
-#ob_dots .current {
-	background-color:#CCC!important;
-}
+#ob_dots .current { background-color:#CCC!important; }
