@@ -304,7 +304,7 @@ else { var oB; }
                     clearTimeout(oB.controlTimer);
                     clearTimeout(oB.slideshowTimer);
                     clearTimeout(oB.scrollTimer);
-                    $(document).orangeControls('destroy', oB.settings.fadeTime);
+                    if(orangeControls) { $(document).orangeControls('destroy', oB.settings.fadeTime); }
                     $(document).unbind("keydown").unbind("mousemove");
                     var x = function() { $(this).remove().empty(); };
                     $('#ob_overlay').fadeOut(oB.settings.fadeTime, function() { $(this).remove().empty(); });
