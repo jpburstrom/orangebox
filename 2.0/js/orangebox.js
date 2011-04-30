@@ -644,7 +644,8 @@ else { var oB; }
                         $.error( 'OrangeBox: Unsupported Media');
                         return false;
                 };
-                $('a[rel*=lightboxlink]').click(function(){
+                $('a[rel*=lightboxlink]').click(function(e){
+                    e.preventDefault();
                     var obj = $(this).clone();
                     oB.methods.setupData(obj, false, false);
                     $('#ob_window').fadeOut(oB.settings.fadeTime, function () {
