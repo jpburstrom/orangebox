@@ -6,7 +6,15 @@
  * license: GNU/GPL license: http://www.gnu.org/copyleft/gpl.html
  */
 if (typeof(oB) !== 'undefined') { $.error( 'OrangeBox: Variable "oB", used by OrangeBox, is already defined');  }
-else { var oB;
+else {
+    var oB;
+    var isTouchDevice = false;
+    try {
+        document.createEvent("TouchEvent");
+        $.getScript('http://code.jquery.com/mobile/1.0a4.1/jquery.mobile-1.0a4.1.min.js');
+        isTouchDevice = true;
+    }
+    catch(e){};
     (function($) {
         oB = {
             progress: '',
@@ -163,12 +171,12 @@ else { var oB;
                                             else if (e.keyCode === 37) {
                                                 oB.methods.slideshowPause();
                                                 oB.progress = "running";
-                                                oB.methods.navigate(-1, "", oB.settings);
+                                                oB.methods.navigate(-1);
                                             }
                                             else if (e.keyCode === 39) {
                                                 oB.methods.slideshowPause();
                                                 oB.progress = "running";
-                                                oB.methods.navigate(1, "", oB.settings);
+                                                oB.methods.navigate(1);
                                             }
                                         }
                                     };
@@ -190,7 +198,7 @@ else { var oB;
                                                     oB.methods.slideshowPause();
                                                     e.stopPropagation();
                                                     oB.progress = "running";
-                                                    oB.methods.navigate(-1, "", oB.settings);
+                                                    oB.methods.navigate(-1);
                                                 }
                                             });
                                             navRight.click(function (e) {
@@ -198,7 +206,7 @@ else { var oB;
                                                     oB.methods.slideshowPause();
                                                     e.stopPropagation();
                                                     oB.progress = "running";
-                                                    oB.methods.navigate(1, "", oB.settings);
+                                                    oB.methods.navigate(1);
                                                 }
                                             });
                                         }
@@ -213,10 +221,27 @@ else { var oB;
                                                     var x = $(this).attr('id').substr(6);
                                                     dotnav.find("li").removeClass('current');
                                                     $(this).addClass('current');
-                                                    oB.methods.navigate("", x , oB.settings );
+                                                    oB.methods.navigate("", x);
                                                 }
                                             });
-                                        }				
+                                        }
+                                    //Initiate Touch Events
+                                        if(isTouchDevice) {
+                                            $(document).bind('swipeleft', function(){
+                                                if(oB.progress === null) {
+                                                    oB.methods.slideshowPause();
+                                                    oB.progress = "running";
+                                                    oB.methods.navigate(1);
+                                                }
+                                            });
+                                            $(document).bind('swiperight', function(){
+                                                if(oB.progress === null) {
+                                                    oB.methods.slideshowPause();
+                                                    oB.progress = "running";
+                                                    oB.methods.navigate(-1);
+                                                }
+                                            });
+                                        }
                                     }
                                     
                                 //Fire in the Hole
@@ -296,6 +321,7 @@ else { var oB;
                         clearTimeout(oB.scrollTimer);
                         if(oB.settings.orangeControls) { $(document).orangeControls('destroy', oB.settings.fadeTime); }
                         $(document).unbind("keydown").unbind("mousemove");
+                        if(isTouchDevice) { $(document).unbind('swipeleft').unbind('swiperight'); }
                         var x = function() { $(this).remove().empty(); };
                         $('#ob_overlay').fadeOut(oB.settings.fadeTime, function() { $(this).remove().empty(); });
                         $('#ob_container').fadeOut(oB.settings.fadeTime, function() { $(this).remove().empty(); $(document).trigger('oB_closed'); });
@@ -394,7 +420,7 @@ else { var oB;
                                             if(oB.progress === null){
                                                 oB.methods.slideshowPause();
                                                 oB.progress = "running";
-                                                oB.methods.navigate(1, "", oB.settings);
+                                                oB.methods.navigate(1);
                                             }
                                         });
                                     }
@@ -404,7 +430,7 @@ else { var oB;
                                             if(oB.progress === null){
                                                 oB.methods.slideshowPause();
                                                 oB.progress = "running";
-                                                oB.methods.navigate(-1, "", oB.settings);
+                                                oB.methods.navigate(-1);
                                             }
                                         });
                                     }
@@ -607,7 +633,7 @@ else { var oB;
                             var h = img.height;
                             if(oB.slideshow && oB.playing) {
                                 oB.slideshowTimer = setTimeout(function(){
-                                    oB.methods.navigate(1, "", oB.settings);
+                                    oB.methods.navigate(1);
                                 },oB.settings.slideshowTimer);
                             }
                             mH = setValue(oB.settings.maxImageHeight, "height");
