@@ -321,7 +321,7 @@ else {
                         clearTimeout(oB.scrollTimer);
                         if(oB.settings.orangeControls) { $(document).orangeControls('destroy', oB.settings.fadeTime); }
                         $(document).unbind("keydown").unbind("mousemove");
-                        if(isTouchDevice) { $(document).unbind('swipeleft').unbind('swiperight'); }
+                        if(isTouchDevice) { $(document).unbind('swipeleft').unbind('swiperight').unbind('tap'); }
                         var x = function() { $(this).remove().empty(); };
                         $('#ob_overlay').fadeOut(oB.settings.fadeTime, function() { $(this).remove().empty(); });
                         $('#ob_container').fadeOut(oB.settings.fadeTime, function() { $(this).remove().empty(); $(document).trigger('oB_closed'); });
@@ -487,7 +487,7 @@ else {
                                     }
                                 },20);
                             });
-                            $('#ob_content').click(function(){
+                            $('#ob_content').bind('tap', function(){
                                 if(controlState) {
                                     clearTimeout(oB.controlTimer);
                                     $('.ob_controls').fadeOut(oB.settings.fadeTime, function(){controlState = false;});
