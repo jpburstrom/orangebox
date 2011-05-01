@@ -321,7 +321,7 @@ else {
                         clearTimeout(oB.scrollTimer);
                         if(oB.settings.orangeControls) { $(document).orangeControls('destroy', oB.settings.fadeTime); }
                         $(document).unbind("keydown").unbind("mousemove");
-                        if(isTouchDevice) { $(document).unbind('swipeleft').unbind('swiperight').unbind('tap'); }
+                        if(isTouchDevice) { $(document).unbind('swipeleft').unbind('swiperight'); }
                         var x = function() { $(this).remove().empty(); };
                         $('#ob_overlay').fadeOut(oB.settings.fadeTime, function() { $(this).remove().empty(); });
                         $('#ob_container').fadeOut(oB.settings.fadeTime, function() { $(this).remove().empty(); $(document).trigger('oB_closed'); });
@@ -332,7 +332,6 @@ else {
                     var title = obj.data('ob_data').ob_title;
                     var contentType = obj.data('ob_data').ob_contentType;
                     var content;
-                    var controlState;
                     var currentIndex = obj.data('ob_data').ob_index;
                     var ob_content = $('<div class="content'+currentIndex+'" id="ob_content"></div>').css({
                             "border-width": oB.settings.contentBorderWidth,
@@ -461,13 +460,12 @@ else {
                                 else { $('#ob_left').hide(); }
                             }
                             $('#ob_close').fadeIn(oB.settings.fadeTime);
-                            controlState = true;
                         };
                         if(oB.settings.fadeControls) {
                             if(!oB.galleryArray[currentIndex + 1] || !oB.galleryArray[currentIndex - 1] || initial) {
                                 showControls();
                                 oB.controlTimer = setTimeout(function() {
-                                    $('.ob_controls').fadeOut(oB.settings.fadeTime, function(){controlState = false;});
+                                    $('.ob_controls').fadeOut(oB.settings.fadeTime);
                                     if(oB.settings.orangeControls) {
                                         $(document).orangeControls('toggle', {'time' : oB.settings.fadeTime, 'fade' : "out"});
                                     }
@@ -479,27 +477,13 @@ else {
                                     showControls();
                                     if (!$(event.target).hasClass('ob_cs') && !$(event.target).hasClass('oc_class')) {
                                         oB.controlTimer = setTimeout(function() {
-                                            $('.ob_controls').fadeOut(oB.settings.fadeTime, function(){controlState = false;});
+                                            $('.ob_controls').fadeOut(oB.settings.fadeTime);
                                             if(oB.settings.orangeControls) {
                                                 $(document).orangeControls('toggle', {'time' : oB.settings.fadeTime, 'fade' : "out"});
                                             }
                                         }, 1200);
                                     }
                                 },20);
-                            });
-                            $('#ob_content').bind('tap', function(){
-                                if(controlState) {
-                                    clearTimeout(oB.controlTimer);
-                                    $('.ob_controls').fadeOut(oB.settings.fadeTime, function(){controlState = false;});
-                                    if(oB.settings.orangeControls) {
-                                        $(document).orangeControls('toggle', {'time' : oB.settings.fadeTime, 'fade' : "out"});
-                                    }
-                                    $('#ob_caption').stop().fadeOut(oB.settings.fadeTime);
-                                }
-                                else {
-                                    showControls();
-                                    $('#ob_caption').stop().fadeTo(oB.settings.fadeTime, 0.95);
-                                }
                             });
                         }
                         else {
