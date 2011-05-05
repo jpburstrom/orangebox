@@ -64,7 +64,6 @@ else {
                 },
                 create : function( obj, options ) {
                     if ( options ) { $.extend( oB.settings, options ); }
-                    if ($('#ob_overlay').length) { oB.methods.destroy(); }
                     if (!obj) { obj = this; }
                     var dotnav = $('<ul id="ob_dots"></ul>');
                     var mainObject;
@@ -475,13 +474,6 @@ else {
                         setModalProperties();
                         setControls();
                         oB.progress = null;
-                        $('a[rel*=lightboxlink]').click(function(e) {
-                            e.preventDefault();
-                            var obj = $(this).clone();
-                            oB.methods.setupData(obj, false, false);
-                            if(obj.data('ob_data').ob_index) { oB.methods.navigate(null, obj.data('ob_data').ob_index); }
-                            else { oB.methods.destroy("", function(){ oB.methods.create(obj); }); }
-                        });
                     }
                     
                 //Error Content
