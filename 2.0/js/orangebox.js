@@ -86,7 +86,7 @@ else {
                     }
                     
                 //Gallery
-                    if (rel.indexOf("[")) { gallery = rel.substring(rel.indexOf("[") + 1, rel.indexOf("]")); }
+                    if (rel && rel.indexOf("[")) { gallery = rel.substring(rel.indexOf("[") + 1, rel.indexOf("]")); }
                     if (gallery) { 
                         var a = 0;
                         var objectMatch = 'a[rel*=\'lightbox[' + gallery + ']\']';						
