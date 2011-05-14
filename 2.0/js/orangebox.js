@@ -9,7 +9,7 @@ $.noConflict();
 if (typeof(oB) !== 'undefined') { $.error( 'OrangeBox: Variable "oB", used by OrangeBox, is already defined');  }
 else {
     var oB;
-    (function($) {
+    jQuery(document).ready(function($) {
         oB = {
             progress: '',
             playing: '',
@@ -694,8 +694,8 @@ else {
             }    
         
         };
-    })(jQuery); 
+    }); 
 }
-(function($) {
+jQuery(document).ready(function($) {
     $('a[rel*=lightbox]').orangeBox();
-})(jQuery);
+});
