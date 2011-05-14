@@ -695,6 +695,6 @@ else {
         };
     })(jQuery); 
 }
-(function($) {
+jQuery(document).ready(function($) {
     $('a[rel*=lightbox]').orangeBox();
-})(jQuery);
+});
