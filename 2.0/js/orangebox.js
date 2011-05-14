@@ -5,7 +5,6 @@
  * copyright: Copyright (c) 2011 David Hamilton / DavidPaulHamilton.net All rights reserved.
  * license: GNU/GPL license: http://www.gnu.org/copyleft/gpl.html
  */
-$.noConflict();
 if (typeof(oB) !== 'undefined') { $.error( 'OrangeBox: Variable "oB", used by OrangeBox, is already defined');  }
 else {
     var oB;
