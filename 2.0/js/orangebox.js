@@ -1,20 +1,14 @@
 /*
- * version: 2.0
+ * version: 2.0.1
  * package: OrangeBox
  * author: David Paul Hamilton - http://orangebox.davidpaulhamilton.net
  * copyright: Copyright (c) 2011 David Hamilton / DavidPaulHamilton.net All rights reserved.
  * license: GNU/GPL license: http://www.gnu.org/copyleft/gpl.html
  */
+$.noConflict();
 if (typeof(oB) !== 'undefined') { $.error( 'OrangeBox: Variable "oB", used by OrangeBox, is already defined');  }
 else {
     var oB;
-    var isTouchDevice = false;
-    try {
-        document.createEvent("TouchEvent");
-        $.getScript('http://code.jquery.com/mobile/1.0a4.1/jquery.mobile-1.0a4.1.min.js');
-        isTouchDevice = true;
-    }
-    catch(e){}
     (function($) {
         oB = {
             progress: '',
@@ -251,21 +245,6 @@ else {
                                     }
                                 });
                             }
-                        //Initiate Touch Events
-                            if(isTouchDevice) {
-                                $(document).bind('swipeleft', function(){
-                                    if(oB.progress === null) {
-                                        oB.methods.slideshowPause();
-                                        oB.methods.navigate(1);
-                                    }
-                                });
-                                $(document).bind('swiperight', function(){
-                                    if(oB.progress === null) {
-                                        oB.methods.slideshowPause();
-                                        oB.methods.navigate(-1);
-                                    }
-                                });
-                            }
                         }
                         
                     //Fire in the Hole
@@ -329,7 +308,6 @@ else {
                     clearTimeout(oB.scrollTimer);
                     if(oB.settings.orangeControls) { $(document).orangeControls('destroy', oB.settings.fadeTime); }
                     $(document).unbind("keydown").unbind("mousemove");
-                    if(isTouchDevice) { $(document).unbind('swipeleft').unbind('swiperight'); }
                     $('#ob_overlay').fadeOut(oB.settings.fadeTime, function() { $(this).remove().empty(); });
                     $('#ob_container').fadeOut(oB.settings.fadeTime, function() {
                         $(this).remove().empty();
@@ -718,7 +696,6 @@ else {
         };
     })(jQuery); 
 }
-$(function() {
+(function($) {
     $('a[rel*=lightbox]').orangeBox();
-    //$('#testcall').click(function (e) {e.preventDefault(); oB.methods.create(this)});
-});
+})(jQuery);
