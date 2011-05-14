@@ -276,7 +276,9 @@ else {
                         else if (z.match(/^http:\/\/\w{0,3}\.?youtube\.\w{2,3}\/watch\?v=[\w\-]{11}/)) { c = "youtube"; }
                         else if (z.match(/^http:\/\/\w{0,3}\.?vimeo\.com\/\d{1,10}/)) { c = "vimeo"; }
                         else if (z.match(/^#\w{1,}/)) { c = "inline"; }
-                        else if (!z.match(/ob_hidden_set/)){ $.error( 'OrangeBox: Unsupported Media'); return false; }
+                        else if (!z.match(/ob_hidden_set/)){
+                            $.error( 'OrangeBox: Unsupported Media', function(){ return false; } );
+                        }
                         if (x === false) {
                             for (i=0; i < oB.galleryArray.length; i++) {
                                 if (oB.galleryArray[i].data('ob_data').ob_href === z) {
