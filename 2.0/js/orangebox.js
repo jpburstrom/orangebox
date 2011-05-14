@@ -8,7 +8,7 @@
 if (typeof(oB) !== 'undefined') { $.error( 'OrangeBox: Variable "oB", used by OrangeBox, is already defined');  }
 else {
     var oB;
-    jQuery(document).ready(function($) {
+		(function($) {
         oB = {
             progress: '',
             playing: '',
@@ -693,8 +693,8 @@ else {
             }    
         
         };
-    }); 
+    })(jQuery); 
 }
-jQuery(document).ready(function($) {
+(function($) {
     $('a[rel*=lightbox]').orangeBox();
-});
+})(jQuery);
