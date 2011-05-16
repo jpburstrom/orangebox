@@ -696,5 +696,6 @@ else {
     })(jQuery); 
 }
 jQuery(document).ready(function($) {
-    $('a[rel*=lightbox]').orangeBox();
+    if (typeof orangebox_vars != "undefined") { $('a[rel*=lightbox]').orangeBox(orangebox_vars); }
+    else { $('a[rel*=lightbox]').orangeBox(); }
 });
