@@ -1,5 +1,5 @@
 /*
- * version: 2.0.1
+ * version: 2.0.2
  * package: OrangeBox
  * author: David Paul Hamilton - http://orangebox.davidpaulhamilton.net
  * copyright: Copyright (c) 2011 David Hamilton / DavidPaulHamilton.net All rights reserved.
@@ -256,6 +256,8 @@ else {
                     var w = 0;
                     var h = 0;
                     var i;
+                    var t = "";
+                    if(typeof o.attr('title') !== "undefined") {t = o.attr('title');}
                     if(v) { z = o.attr('id'); }
                     else { z = o.attr('href'); }
                     if(z) {
@@ -291,7 +293,7 @@ else {
                         ob_index: x,
                         ob_contentType: c,
                         ob_href: z,
-                        ob_title: o.attr('title'),
+                        ob_title: t,
                         ob_linkText: o.attr('data-ob_linkText'),
                         ob_link: o.attr('data-ob_link'),
                         ob_caption: o.attr('data-ob_caption'),
@@ -696,6 +698,6 @@ else {
     })(jQuery); 
 }
 jQuery(document).ready(function($) {
-    if (typeof orangebox_vars != "undefined") { $('a[rel*=lightbox]').orangeBox(orangebox_vars); }
+    if (typeof orangebox_vars !== "undefined") { $('a[rel*=lightbox]').orangeBox(orangebox_vars); }
     else { $('a[rel*=lightbox]').orangeBox(); }
 });
