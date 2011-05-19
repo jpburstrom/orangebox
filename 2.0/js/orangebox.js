@@ -368,7 +368,7 @@ else {
                             ob_caption.append('<p>'+obj.data('ob_data').ob_caption+'</p>');
                             $('#ob_content').append(ob_caption);
                         }
-                        $('#ob_content').swipe({
+                        $(document).swipe({
                             swipeLeft: function() { oB.methods.navigate(-1); },
                             swipeRight: function() { oB.methods.navigate(1); }
                        });
