@@ -1,5 +1,5 @@
 /*
- * version: 2.0.2
+ * version: 2.1.0
  * package: OrangeBox
  * author: David Paul Hamilton - http://orangebox.davidpaulhamilton.net
  * copyright: Copyright (c) 2011 David Hamilton / DavidPaulHamilton.net All rights reserved.
@@ -26,6 +26,7 @@ else {
                 showClose: true,
                 showDots: false,
                 showNav: true,
+                addThis: true,
                 notFound: 'Not Found',
                 overlayOpacity: 0.95,
                 contentBorderWidth: 4,
@@ -44,9 +45,10 @@ else {
             },
             methods: {
                 init : function( options ) {
-                    if (!$('#ob_window').length) {			
+                    if (!$('#ob_window').length) {
                         if ( options ) { $.extend( oB.settings, options ); }
-                        return this.each(function() {
+                            if ( oB.settings.addThis ) { $.getScript('http://s7.addthis.com/js/250/addthis_widget.js#pubid=ra-4dd42f2b5b9fc332'); }
+                            return this.each(function() {
                             $(this).click(function(e) {
                                 e.preventDefault();
                                 oB.methods.create(this);
@@ -297,7 +299,9 @@ else {
                         ob_linkText: o.attr('data-ob_linkText'),
                         ob_link: o.attr('data-ob_link'),
                         ob_caption: o.attr('data-ob_caption'),
-                        ob_linkTarget: o.attr('data-ob_linkTarget')
+                        ob_linkTarget: o.attr('data-ob_linkTarget'),
+                        ob_share: o.attr('data-ob_share'),
+                        ob_shareLink: o.attr('data-ob_shareLink')
                     });
                 },
                 destroy : function( options, x ) {
@@ -364,7 +368,10 @@ else {
                             ob_caption.append('<p>'+obj.data('ob_data').ob_caption+'</p>');
                             $('#ob_content').append(ob_caption);
                         }
-                        
+                        $('#ob_content').swipe({
+                            swipeLeft: function() { oB.methods.navigate(-1); },
+                            swipeRight: function() { oB.methods.navigate(1); }
+                       });
                     //Check for Mins
                         if(wH < oB.settings.contentMinHeight) { wH = oB.settings.contentMinHeight + (oB.settings.contentBorderWidth*2); }
                         if(wW < oB.settings.contentMinWidth) { wW = oB.settings.contentMinWidth + (oB.settings.contentBorderWidth*2); }
@@ -446,6 +453,19 @@ else {
                     function buildit() {
                         oB.methods.showLoad("stop");
                         $('#ob_content').append(content);
+                            if ( oB.settings.addThis && contentType !== "iframe" && contentType !== "inline" && obj.data('ob_data').ob_share !== "false") {
+                                $('#ob_share').empty().remove();
+                                var addThis = $('<a id="ob_share" class="addthis_button_compact"></a>');
+                                var shareClass = "ob_share-"+title;
+                                var link = href;
+                                if ( obj.data('ob_data').ob_shareLink ) { link = obj.data('ob_data').ob_shareLink; }
+                                addThis.addClass(shareClass);
+                                $('#ob_window').append(addThis);
+                                $('#ob_title').css('margin-right', 24);
+                                addthis.button('.'+shareClass, { services_compact: 'twitter,facebook,digg,delicious,more', ui_offset_left: -244, ui_offset_top: 4 }, { url: link, title: title });
+                                $('#ob_share').html('').append('<span class="at300bs at15nc at15t_compact"></span>');
+                                if ( title === "" ) { title = "share" }
+                            }
                         $('#ob_window').fadeIn(oB.settings.fadeTime, function(){
                             if(initial){ $(document).trigger('oB_init'); }
                             $('#ob_overlay').css({ "height": $(document).height() });
@@ -697,6 +717,59 @@ else {
         };
     })(jQuery); 
 }
+(function($) {
+	$.fn.swipe = function(options) {
+		var defaults = {
+			threshold: {
+				x: 30,
+				y: 10
+			},
+			swipeLeft: function() { alert('swiped left') },
+			swipeRight: function() { alert('swiped right') }
+		};
+		var options = $.extend(defaults, options);
+		if (!this) return false;
+		return this.each(function() {
+			var me = $(this)
+			var originalCoord = { x: 0, y: 0 }
+			var finalCoord = { x: 0, y: 0 }
+			function touchStart(event) {
+				originalCoord.x = event.targetTouches[0].pageX
+				originalCoord.y = event.targetTouches[0].pageY
+			}
+			function touchMove(event) {
+			    event.preventDefault();
+				finalCoord.x = event.targetTouches[0].pageX
+				finalCoord.y = event.targetTouches[0].pageY
+			}
+			function touchEnd(event) {
+				var changeY = originalCoord.y - finalCoord.y
+				if(changeY < defaults.threshold.y && changeY > (defaults.threshold.y*-1)) {
+					changeX = originalCoord.x - finalCoord.x
+					
+					if(changeX > defaults.threshold.x) {
+						defaults.swipeLeft()
+					}
+					if(changeX < (defaults.threshold.x*-1)) {
+						defaults.swipeRight()
+					}
+				}
+			}
+			function touchStart(event) {
+				originalCoord.x = event.targetTouches[0].pageX
+				originalCoord.y = event.targetTouches[0].pageY
+				finalCoord.x = originalCoord.x
+				finalCoord.y = originalCoord.y
+			}
+			function touchCancel(event) { 
+			}
+			this.addEventListener("touchstart", touchStart, false);
+			this.addEventListener("touchmove", touchMove, false);
+			this.addEventListener("touchend", touchEnd, false);
+			this.addEventListener("touchcancel", touchCancel, false);
+		});
+	};
+})(jQuery);
 jQuery(document).ready(function($) {
     if (typeof orangebox_vars !== "undefined") { $('a[rel*=lightbox]').orangeBox(orangebox_vars); }
     else { $('a[rel*=lightbox]').orangeBox(); }

@@ -52,6 +52,7 @@
 #ob_caption p {
 	padding:0;
 	margin:10px;
+	cursor:text;
 }
 #ob_window img {
 	display:block;
@@ -152,3 +153,8 @@
 	*display:inline;
 }
 #ob_dots .current { background-color:#CCC!important; }
+#ob_share {
+	position:absolute;
+	right:24px;
+	top:3px;
+}
