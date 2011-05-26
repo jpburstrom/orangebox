@@ -1,5 +1,5 @@
 /*
- * version: 2.0.3
+ * version: 2.0.4
  * package: OrangeBox
  * author: David Paul Hamilton - http://orangebox.davidpaulhamilton.net
  * copyright: Copyright (c) 2011 David Hamilton / DavidPaulHamilton.net All rights reserved.
@@ -8,7 +8,7 @@
 if (typeof(oB) !== 'undefined') { $.error( 'OrangeBox: Variable "oB", used by OrangeBox, is already defined');  }
 else {
     var oB;
-		(function($) {
+	(function($) {
         oB = {
             progress: '',
             playing: '',
@@ -279,6 +279,7 @@ else {
                         else if (z.match(/\.swf(\?.{6,}\&.{6,})?$/)) { c = "flash"; }
                         else if (z.match(/^http:\/\/\w{0,3}\.?youtube\.\w{2,3}\/watch\?v=[\w\-]{11}/)) { c = "youtube"; }
                         else if (z.match(/^http:\/\/\w{0,3}\.?vimeo\.com\/\d{1,10}/)) { c = "vimeo"; }
+                        else if (z.match(/^http:\/\/\w{0,3}\.?viddler\.com\/([simple]|[player])\/\w{1,10}/)) { c = "viddler"; }
                         else if (z.match(/^#\w{1,}/)) { c = "inline"; }
                         else if (!z.match(/ob_hidden_set/)){ $.error( 'OrangeBox: Unsupported Media'); }
                         if (x === false) {
@@ -566,6 +567,15 @@ else {
                             content = $('<iframe id="ob_video" '+a+' src="http://player.vimeo.com/video/'+i+'?title=0&byline=0&portrait=0&autoplay=1&wmode=transparent"></iframe>');
                         }
                         
+                    //If Viddler (player)
+                        else if (contentType === "viddler") { 
+                            if(indexOf("viddler.com/player/") > 0) { iI = href.indexOf("viddler.com/player/") + 19; }
+                            else if(indexOf("viddler.com/simple/") > 0) { iI = href.indexOf("viddler.com/simple/") + 19; }
+                            if (href.indexOf("?") > iI) { i = href.substring(iI, href.indexOf("?")); }
+                            else { i = href.substring(iI); }
+                            content = $('<iframe id="ob_video" '+a+' src="http://cdn.static.viddler.com/flash/publisher.swf?key='+i+'&title=0&byline=0&portrait=0&autoplay=1&wmode=transparent"></iframe>');
+                        }
+                        
                     //If Quicktime
                         else if (contentType === "quicktime") { 
                             content = $('<div id="ob_video"><object classid="clsid:02BF25D5-8C17-4B23-BC80-D3488ABDDC6B" codebase="http://www.apple.com/qtactivex/qtplugin.cab" height="' + h + '" width="' + w + '"><param name="src" value="' + href + '"><param name="wmode" value="transparent" /><param name="type" value="video/quicktime"><param name="autoplay" value="true"><embed src="' + href + '" height="' + h + '" width="' + w + '" autoplay="true" type="video/quicktime" pluginspage="http://www.apple.com/quicktime/download/" scale="aspect"></embed></object></div>');
@@ -638,6 +648,7 @@ else {
                         case "quicktime":
                         case "youtube":
                         case "vimeo":
+                        case "viddler":
                         case "flash":
                             showVideo();
                             break;
