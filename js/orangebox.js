@@ -1,5 +1,5 @@
 /*
- * version: 2.0.4
+ * version: 2.0.3
  * package: OrangeBox
  * author: David Paul Hamilton - http://orangebox.davidpaulhamilton.net
  * copyright: Copyright (c) 2011 David Hamilton / DavidPaulHamilton.net All rights reserved.
@@ -8,7 +8,7 @@
 if (typeof(oB) !== 'undefined') { $.error( 'OrangeBox: Variable "oB", used by OrangeBox, is already defined');  }
 else {
     var oB;
-	(function($) {
+		(function($) {
         oB = {
             progress: '',
             playing: '',
@@ -129,7 +129,8 @@ else {
                         var overlay = $('<div id="ob_overlay"></div>');
                         var container = $('<div id="ob_container"></div>');
                         var floater = $('<div id="ob_float"></div>');
-                        var window = $('<div id="ob_window"></div>').click(function(e) { e.stopPropagation(); });
+                        var window = $('<div id="ob_window"></div>').click(function(e) { oB.methods.destroy(oB.settings);
+e.stopPropagation(); });
                         var close = $('<div title="close" class="ob_controls ob_cs" id="ob_close"></div>').click(function() {
                             oB.methods.destroy(oB.settings);
                         });
@@ -279,7 +280,6 @@ else {
                         else if (z.match(/\.swf(\?.{6,}\&.{6,})?$/)) { c = "flash"; }
                         else if (z.match(/^http:\/\/\w{0,3}\.?youtube\.\w{2,3}\/watch\?v=[\w\-]{11}/)) { c = "youtube"; }
                         else if (z.match(/^http:\/\/\w{0,3}\.?vimeo\.com\/\d{1,10}/)) { c = "vimeo"; }
-                        else if (z.match(/^http:\/\/\w{0,3}\.?viddler\.com\/([simple]|[player])\/\w{1,10}/)) { c = "viddler"; }
                         else if (z.match(/^#\w{1,}/)) { c = "inline"; }
                         else if (!z.match(/ob_hidden_set/)){ $.error( 'OrangeBox: Unsupported Media'); }
                         if (x === false) {
@@ -300,6 +300,7 @@ else {
                         ob_linkText: o.attr('data-ob_linkText'),
                         ob_link: o.attr('data-ob_link'),
                         ob_caption: o.attr('data-ob_caption'),
+                        ob_numbering: o.attr('data-ob_numbering'),
                         ob_linkTarget: o.attr('data-ob_linkTarget'),
                         ob_share: o.attr('data-ob_share'),
                         ob_shareLink: o.attr('data-ob_shareLink')
@@ -327,9 +328,7 @@ else {
                     var contentType = obj.data('ob_data').ob_contentType;
                     var content;
                     var currentIndex = obj.data('ob_data').ob_index;
-                    var ob_caption = $('<div id="ob_caption"></div>').css({
-                            "opacity" : 0.95
-                        });
+                    var ob_caption = $('<div id="ob_caption"></div>');
                     if(oB.settings.fadeCaption) {
                         ob_caption.hide();
                         $('#ob_content').hover(function(){
@@ -365,10 +364,13 @@ else {
                             else { title = title+' '+obj.data('ob_data').ob_linkText; }
                         }
                         $('#ob_title').append('<h3>' + title + '</h3>');
+                        if (obj.data('ob_numbering')) {
+                            $('#ob_title').append('<span id="ob_numbering">' + obj.data('ob_numbering') + '</span>');
+                        }
                         if(obj.data('ob_data').ob_caption) {
                             ob_caption.append('<p>'+obj.data('ob_data').ob_caption+'</p>');
-                            $('#ob_content').append(ob_caption);
                         }
+                        $('#ob_content').append(ob_caption);
                     //Check for Mins
                         if(wH < oB.settings.contentMinHeight) { wH = oB.settings.contentMinHeight + (oB.settings.contentBorderWidth*2); }
                         if(wW < oB.settings.contentMinWidth) { wW = oB.settings.contentMinWidth + (oB.settings.contentBorderWidth*2); }
@@ -499,6 +501,9 @@ else {
                         else if(i > 0) {
                             if(x === "width") { return w * i; }
                             else if(x === "height") { return h * i; }
+                        } else if (i < -1) { //JPB
+                            if (x === "width") { return w + i; }
+                            if (x === "height") { return h + i; }
                         }
                         return false;
                     }
@@ -565,15 +570,6 @@ else {
                             if (href.indexOf("?") > iI) { i = href.substring(iI, href.indexOf("?")); }
                             else { i = href.substring(iI); }
                             content = $('<iframe id="ob_video" '+a+' src="http://player.vimeo.com/video/'+i+'?title=0&byline=0&portrait=0&autoplay=1&wmode=transparent"></iframe>');
-                        }
-                        
-                    //If Viddler (player)
-                        else if (contentType === "viddler") { 
-                            if(indexOf("viddler.com/player/") > 0) { iI = href.indexOf("viddler.com/player/") + 19; }
-                            else if(indexOf("viddler.com/simple/") > 0) { iI = href.indexOf("viddler.com/simple/") + 19; }
-                            if (href.indexOf("?") > iI) { i = href.substring(iI, href.indexOf("?")); }
-                            else { i = href.substring(iI); }
-                            content = $('<iframe id="ob_video" '+a+' src="http://cdn.static.viddler.com/flash/publisher.swf?key='+i+'&title=0&byline=0&portrait=0&autoplay=1&wmode=transparent"></iframe>');
                         }
                         
                     //If Quicktime
@@ -648,7 +644,6 @@ else {
                         case "quicktime":
                         case "youtube":
                         case "vimeo":
-                        case "viddler":
                         case "flash":
                             showVideo();
                             break;
